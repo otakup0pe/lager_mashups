@@ -24,7 +24,7 @@ handle_call(_, State) ->
 handle_info(_, State) ->
 	{ok, State}.
 
-handle_event({log, Message}, #state{last = L, error_count = EC, warning_count = WC} = State) ->
+handle_event({log, Message}, #state{error_count = EC, warning_count = WC} = State) ->
     {ok, p_sink(case lager_msg:severity_as_int(Message) of
 		    ?WARNING ->
 			State#state{warning_count = WC + 1};

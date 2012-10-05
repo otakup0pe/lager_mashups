@@ -22,7 +22,7 @@ handle_call(get_loglevel, #state{level = Level} = State) ->
 handle_call({set_loglevel, Level}, State) ->
     case lists:member(Level, ?LEVELS) of
 	true ->
-	    {ok, ok, #state{level=lager_util:level_to_num(Level)}}
+	    {ok, ok, State#state{level=lager_util:level_to_num(Level)}}
     end.
 
 %% @doc Replacing this module with newer version
@@ -40,5 +40,5 @@ handle_event({log, Message}, #state{level=L, formatter=F, format_config=FC} = St
 handle_event(_, State) ->
     {ok, State}.
 
-p_emit(Message, #state{erlfire=N, room=R} = State) ->
+p_emit(Message, #state{erlfire=N, room=R}) ->
     ok = erlfire:chat(N, R, Message).
