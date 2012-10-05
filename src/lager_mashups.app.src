@@ -1,0 +1,6 @@
+{application,lager_mashups,
+             [{description,"graphite / campfire lager mashups"},
+              {vsn,"0.1"},
+              {registered,[]},
+              {applications,[kernel,stdlib,egc,erlfire,lager]}
+]}.
