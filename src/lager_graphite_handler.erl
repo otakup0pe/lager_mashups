@@ -11,12 +11,12 @@
 ]).
 
 -include("lager_mashups.hrl").
--record(state, {error_key, warning_key, error_count=0, warning_count=0, last}).
+-record(state, {graphite, error_key, warning_key, error_count=0, warning_count=0, last}).
 
 enow() ->
     calendar:datetime_to_gregorian_seconds(calendar:universal_time()).
-init([ErrorKey, WarningKey]) -> 
-    {ok, #state{error_key=ErrorKey, warning_key=WarningKey, last = enow()}}.
+init([Graphite, ErrorKey, WarningKey]) -> 
+    {ok, #state{graphite = Graphite, error_key=ErrorKey, warning_key=WarningKey, last = enow()}}.
 
 handle_call(_, State) ->
 	{ok, ok, State}.
@@ -44,8 +44,8 @@ code_change(_OldVsn, State, _Extra) ->
 
 p_sink(State) ->
     p_sink(enow(), State).
-p_sink(Now, #state{error_key = EK, warning_key = WK, error_count = EC, warning_count = WC, last = L} = State) when Now - L > 60 ->
-    graphite:send(graphite, [{EK, EC}, {WK, WC}]),
+p_sink(Now, #state{graphite = G, error_key = EK, warning_key = WK, error_count = EC, warning_count = WC, last = L} = State) when Now - L > 60 ->
+    graphite:send(G, [{EK, EC}, {WK, WC}]),
     State#state{error_count = 0, warning_count = 0, last = Now};
 p_sink(_, State) ->
     State.
