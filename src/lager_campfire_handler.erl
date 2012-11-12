@@ -1,3 +1,5 @@
+
+
 -module(lager_campfire_handler).
 
 -behaviour(gen_event).
@@ -41,4 +43,4 @@ handle_event(_, State) ->
     {ok, State}.
 
 p_emit(Message, #state{erlfire=N, room=R}) ->
-    ok = erlfire:chat(N, R, Message).
+    ok = erlfire:chat(N, R, "[" ++ atom_to_list(node()) ++ "] " ++Message).
